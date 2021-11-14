@@ -21,14 +21,13 @@ namespace TestDerebit
         private string balanceBeforeTransferValue;
         private string balanceAfterTransferValue;
         private string transferCommisionValue;
-        
 
-        
+        ChromeDriver driver;
 
         [Test]
         public void TransferTest()
         {
-            ChromeDriver driver = new ChromeDriver();
+            driver = new ChromeDriver();
             driver.Navigate().GoToUrl(webSiteURL);
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@id='email']")));
@@ -84,8 +83,14 @@ namespace TestDerebit
             deltaValue = Convert.ToDouble(balanceBeforeTransferValue) - amountToSend -Convert.ToDouble(transferCommisionValue);
             Debug.WriteLine("deltaValue: " + deltaValue);
 
-            //костыль Колстыль
+            //Assert.AreEqual(deltaValue, Convert.ToDouble(balanceAfterTransferValue));
             Assert.AreNotEqual(Convert.ToDouble(balanceBeforeTransferValue), Convert.ToDouble(balanceAfterTransferValue));
+        }
+
+        [TearDown]
+        public void KillWebdriver()
+        {
+            driver.Quit();
         }
     }
 }
