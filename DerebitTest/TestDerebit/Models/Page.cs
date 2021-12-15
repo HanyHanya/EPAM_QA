@@ -26,6 +26,10 @@ namespace TestDerebit.Models
             _driver.FindElement(element).Click();
         }
 
+        public void WaitUntilVisible(By element)
+        {
+            _wait.Until(ExpectedConditions.ElementIsVisible(element));
+        }
         public void WaitUntilVisibleAndSendKeys(By element, string keys)
         {
             _wait.Until(ExpectedConditions.ElementIsVisible(element));

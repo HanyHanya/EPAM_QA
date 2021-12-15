@@ -10,22 +10,18 @@ namespace TestDerebit.Models
 {
     class ByCryptoPage : Page
     {
-        private By _amountToSpendLocator = By.XPath("//input[@class='MuiInputBase-input MuiInput-input deribit-2068 deribit-2070 MuiInputBase-inputAdornedEnd']");
-        private By _agreeCheckboxLocator = By.XPath("//input[@class='deribit-171']");
-        private By _SpendButtonLocator = By.XPath("//button[@class='MuiButtonBase-root MuiButton-root deribit-56 deribit-172 MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled']");
+        private By _amountToSpendLocator = By.XPath("//*[@id='mainBody']/div[2]/div/div[2]/div/div[1]/div/div[2]/div/div[1]/div/div/input");
+        private By _agreeCheckboxLocator = By.XPath("//*[@id='mainBody']/div[2]/div/div[2]/div/div[3]/div[2]/div/div[2]/div/label/span[2]");
+        private By _SpendButtonLocator = By.XPath("//*[@id='mainBody']/div[2]/div/div[2]/div/div[3]/div[2]/div/div[2]/div/div/button");
+        private By _getAmount = By.XPath("//*[@id='mainBody']/div[2]/div/div[2]/div/div[3]/div[1]/div/div[2]/div/div/table/tbody/tr[4]/td[2]");
+        private By _balance = By.XPath("//*[@id='mainHeader']/header/div/div[8]/div/div[3]/div[1]/div/span/span[2]");
 
         public ByCryptoPage(WebDriver driver)
         {
             _driver = driver;
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
-
-        private ByCryptoPage EnterAmountToSpend(string amount)
-        {
-            WaitUntilVisibleAndSendKeys(_amountToSpendLocator, amount);
-            return this;
-        }
-
+                
         private ByCryptoPage SelectAgreeCkechbox()
         {
             WaitUntilVisibleAndClick(_agreeCheckboxLocator);
@@ -37,10 +33,28 @@ namespace TestDerebit.Models
             WaitUntilClickableAndClick(_SpendButtonLocator);
             return this;
         }
-
-        public ByCryptoPage ByCrypto(string amount)
+        public ByCryptoPage EnterAmountToSpend(string amount)
         {
-            EnterAmountToSpend(amount);
+            WaitUntilVisibleAndSendKeys(_amountToSpendLocator, amount);
+            return this;
+        }
+        public double GetSpendAmount()
+        {
+            WaitUntilVisible(_getAmount);
+            string s = _driver.FindElement(_getAmount).Text.Split(' ')[0];
+            Console.WriteLine(s);
+            return Convert.ToDouble(_driver.FindElement(_getAmount).Text.Split(' ')[0].Replace('.', ','));
+        }
+
+        public double GetSpendBalance()
+        {
+            WaitUntilVisible(_balance);
+            string s = _driver.FindElement(_balance).Text;
+            Console.WriteLine(s);
+            return Convert.ToDouble(_driver.FindElement(_balance).Text.Replace('.', ','));
+        }
+        public ByCryptoPage ByCrypto()
+        {
             SelectAgreeCkechbox();
             return SendMoneyToBy();
         }

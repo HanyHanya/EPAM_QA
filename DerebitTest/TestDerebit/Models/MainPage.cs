@@ -11,8 +11,9 @@ namespace TestDerebit.Models
 {
     class MainPage : Page
     {
-        private By _menuButtonLocator = By.Id("sideMenuBtn");
+        private By _menuButtonLocator = By.XPath("//button[@data-id='sideMenuBtn']");
         private By _transferMenuButtonLocator = By.XPath("//a[@data-id='transfer']");        
+        private By _byCryptoMenuButtonLocator = By.XPath("//a[@data-id='buyCrypto']");        
 
         public MainPage(WebDriver driver)
         {
@@ -32,10 +33,23 @@ namespace TestDerebit.Models
             return new TransferPage(_driver);
         }
 
+        private ByCryptoPage SelectByCryptoferPage()
+        {
+            WaitUntilVisibleAndClick(_byCryptoMenuButtonLocator);
+            return new ByCryptoPage(_driver);
+        }
+
+
         public TransferPage GoToTransferPage()
         {
             OpenMenu();
             return SelectTransferPage();
+        }
+
+        public ByCryptoPage GoToByCryptoPage()
+        {
+            OpenMenu();
+            return SelectByCryptoferPage();
         }
     }
 }
