@@ -9,13 +9,10 @@ using System.Threading.Tasks;
 
 namespace TestDerebit.Models
 {
-    class MainPage
+    class MainPage : Page
     {
         private By _menuButtonLocator = By.Id("sideMenuBtn");
-        private By _transferMenuButtonLocator = By.XPath("//a[@data-id='transfer']");
-
-        private WebDriver _driver;
-        private WebDriverWait _wait;
+        private By _transferMenuButtonLocator = By.XPath("//a[@data-id='transfer']");        
 
         public MainPage(WebDriver driver)
         {
@@ -23,18 +20,15 @@ namespace TestDerebit.Models
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
 
-
         private MainPage OpenMenu()
         {
-            _wait.Until(ExpectedConditions.ElementToBeClickable(_menuButtonLocator));
-            _driver.FindElement(_menuButtonLocator).Click();
+            WaitUntilVisibleAndClick(_menuButtonLocator);
             return this;
         }
 
         private TransferPage SelectTransferPage()
         {
-            _wait.Until(ExpectedConditions.ElementToBeClickable(_transferMenuButtonLocator));
-            _driver.FindElement(_transferMenuButtonLocator).Click();
+            WaitUntilVisibleAndClick(_transferMenuButtonLocator);
             return new TransferPage(_driver);
         }
 
@@ -42,7 +36,6 @@ namespace TestDerebit.Models
         {
             OpenMenu();
             return SelectTransferPage();
-
         }
     }
 }

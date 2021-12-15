@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,8 @@ using System.Threading.Tasks;
 
 namespace TestDerebit.Models
 {
-    class LoginPage
+    class LoginPage : Page
     {
-        private WebDriver _driver;
-        private WebDriverWait _wait;
-
         private By _emileFieldLocator = By.XPath("//*[@id='email']");
         private By _passwordFieldLocator = By.XPath("//*[@id='password']");
         private By _loginButtonLocator = By.XPath("//button[@data-id='login']");
@@ -24,20 +22,20 @@ namespace TestDerebit.Models
         }
 
         private LoginPage EnterEmail(String email)
-        {
-            _driver.FindElement(_emileFieldLocator).SendKeys(email);
+        {           
+            WaitUntilVisibleAndSendKeys(_emileFieldLocator, email);
             return this;
         }
 
         private LoginPage EnterPassword(String password)
         {
-            _driver.FindElement(_passwordFieldLocator).SendKeys(password);
+            WaitUntilVisibleAndSendKeys(_passwordFieldLocator, password);
             return this;
         }
 
         private MainPage Login()
         {
-            _driver.FindElement(_loginButtonLocator).Click();
+            WaitUntilClickableAndClick(_loginButtonLocator);
             return new MainPage(_driver);
         }
 

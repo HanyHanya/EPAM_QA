@@ -13,19 +13,13 @@ namespace TestDerebit
     [TestFixture]
     class TestDerebit
     {
-        private double amountToSend = 1;
-        private double deltaValue;
         private string username = "kiroki2001@gmail.com";
         private string password = "7mjX5@gPA23YMYc";
         private string webSiteURL = $"https://test.deribit.com/";
-        private string balanceBeforeTransferValue;
-        private string balanceAfterTransferValue;
-        private string transferCommisionValue;
 
         ChromeDriver driver;
-        // поменять поиск
         [Test]
-        public void TransferTest()
+        /*public void TransferTest()
         {
             driver = new ChromeDriver();
             driver.Navigate().GoToUrl(webSiteURL);
@@ -88,7 +82,7 @@ namespace TestDerebit
 
             //Assert.AreEqual(deltaValue, Convert.ToDouble(balanceAfterTransferValue));
             Assert.AreNotEqual(Convert.ToDouble(balanceBeforeTransferValue), Convert.ToDouble(balanceAfterTransferValue));
-        }
+        }*/
 
         [TearDown]
         public void KillWebdriver()

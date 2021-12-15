@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TestDerebit.Models
 {
-    class TransferPage
+    class TransferPage : Page
     {
         private By _transferSourceDropDownLocator = By.XPath("//div[@class='MuiListItemText-root'  and contains(span, 'Please select a source')]");
         private By _transferDestinationDropDownLocator = By.XPath("//div[@class='MuiListItemText-root'  and contains(span, 'Please select a destination')]");
@@ -25,9 +25,6 @@ namespace TestDerebit.Models
         public double balanceAfterTransfer { get; private set; }
         public double transferCommision { get; private set; }
 
-        private WebDriver _driver;
-        private WebDriverWait _wait;
-
         public TransferPage(WebDriver driver)
         {
             _driver = driver;
@@ -36,33 +33,28 @@ namespace TestDerebit.Models
 
         private TransferPage SelectSource()
         {
-            _wait.Until(ExpectedConditions.ElementToBeClickable(_transferSourceDropDownLocator));
-            _driver.FindElement(_transferSourceDropDownLocator).Click();
-            _wait.Until(ExpectedConditions.ElementIsVisible(_transferSourceSelectedLocator));
-            _driver.FindElement(_transferSourceSelectedLocator).Click();
+            WaitUntilClickableAndClick(_transferSourceDropDownLocator);
+            WaitUntilVisibleAndClick(_transferSourceSelectedLocator);
             return this;
         }
 
         private TransferPage SelectDestination()
         {
-            _driver.FindElement(_transferDestinationDropDownLocator).Click();
-            _wait.Until(ExpectedConditions.ElementIsVisible(_transferDestinationSelectedLocator));
-            _driver.FindElement(_transferDestinationSelectedLocator).Click();
+            WaitUntilClickableAndClick(_transferDestinationDropDownLocator);
+            WaitUntilVisibleAndClick(_transferDestinationSelectedLocator);
             return this;
         }
         private TransferPage EnterAmount(string amount)
         {
-            _wait.Until(ExpectedConditions.ElementIsVisible(_amountTotransferLocator));
-            _driver.FindElement(_amountTotransferLocator).SendKeys(amount);
+            WaitUntilVisibleAndSendKeys(_amountTotransferLocator, amount);
             return this;
         }
 
         private TransferPage MakeTransfer()
         {
-            _wait.Until(ExpectedConditions.ElementToBeClickable(_transferButtonLocator));
             balanceBeforeTransfer = Convert.ToDouble(_driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0]);
             transferCommision = Convert.ToDouble(_driver.FindElement(_transferCommisionFLocator).Text.Split(' ')[0]);
-            _driver.FindElement(_transferButtonLocator).Click();
+            WaitUntilClickableAndClick(_transferButtonLocator);
             _wait.Until(ExpectedConditions.ElementIsVisible(_transferBalanceLocator));
             balanceAfterTransfer = Convert.ToDouble(_driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0]);
             return this;
