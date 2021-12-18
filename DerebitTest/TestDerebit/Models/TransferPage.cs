@@ -20,7 +20,6 @@ namespace TestDerebit.Models
         private By _transferButtonLocator = By.XPath("//button[@data-id='transferBtn']");
 
         private By _transferBalanceLocator = By.XPath("//p[@data-id='tradingBalance']");
-        private By _transferCommisionFLocator = By.XPath("//p[@data-id='currentSessionProfits']");
 
         public TransferPage(WebDriver driver)
         {
@@ -55,16 +54,10 @@ namespace TestDerebit.Models
 
         public double GetTransferBalance()
         {
+            WaitUntilVisible(_transferBalanceLocator);
             string s = _driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0];
             Console.WriteLine(s);
-            return Convert.ToDouble(_driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0].Replace('.', ','));
-        }
-
-        public double GetTransferCommision()
-        {
-            string s = _driver.FindElement(_transferCommisionFLocator).Text.Split(' ')[0];
-            Console.WriteLine(s);
-            return Convert.ToDouble(_driver.FindElement(_transferCommisionFLocator).Text.Split(' ')[0].Replace('.', ','));
+            return Convert.ToDouble(_driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0]);
         }
 
         public TransferPage MakeTransfer(string amount)

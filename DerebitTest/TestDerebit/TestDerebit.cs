@@ -17,6 +17,7 @@ namespace TestDerebit
         private string username = "kiroki2001@gmail.com";
         private string password = "7mjX5@gPA23YMYc";
         private string webSiteURL = $"https://test.deribit.com/";
+        private LoginPage loginPage;
 
         public double balanceBeforeTransfer;
         public double balanceAfterTransfer;
@@ -24,20 +25,31 @@ namespace TestDerebit
         public double balanceAfterByCrypto;
         public double byCryptoGetAmount;
         ChromeDriver driver;
-        [Test]
-        [TestCase(1)]
-        public void Transfer_returnExpectedValue(double TransferAmount)
+
+        [SetUp]
+        public void SetUp()
         {
             driver = new ChromeDriver();
             driver.Navigate().GoToUrl(webSiteURL);
             driver.Manage().Window.Maximize();
-            LoginPage loginPage = new LoginPage(driver);
+            loginPage = new LoginPage(driver);
+        }
+        [Test]
+        [TestCase(1)]
+        public void Transfer_returnExpectedValue(double TransferAmount)
+        {
+            
             TransferPage transferPage = loginPage.LoginAs(username, password).GoToTransferPage();
             balanceBeforeTransfer = transferPage.GetTransferBalance();
             transferPage.MakeTransfer(Convert.ToString(TransferAmount));
             Thread.Sleep(1000);
             balanceAfterTransfer = transferPage.GetTransferBalance();
-            Assert.AreEqual(Math.Round(balanceBeforeTransfer - TransferAmount, 3), Math.Round(balanceAfterTransfer,3));
+            double expected = balanceBeforeTransfer - TransferAmount;
+            Console.WriteLine(balanceBeforeTransfer);
+            Console.WriteLine(expected);
+            double real = balanceAfterTransfer;
+            Console.WriteLine(real);
+            Assert.AreEqual(expected, real);
         }
 
 
@@ -45,10 +57,6 @@ namespace TestDerebit
         [TestCase(1000)]
         public void ByCrypto_ReturnExpectedValue(double AmountToSpend)
         {
-            driver = new ChromeDriver();
-            driver.Navigate().GoToUrl(webSiteURL);
-            driver.Manage().Window.Maximize();
-            LoginPage loginPage = new LoginPage(driver);
             ByCryptoPage byCryptoPage = loginPage.LoginAs(username, password).GoToByCryptoPage();
             byCryptoPage.EnterAmountToSpend(Convert.ToString(AmountToSpend));
             balanceBeforeByCrypto = byCryptoPage.GetSpendBalance();
