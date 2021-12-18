@@ -18,6 +18,7 @@ namespace TestDerebit
         private string password = "7mjX5@gPA23YMYc";
         private string webSiteURL = $"https://test.deribit.com/";
         private LoginPage loginPage;
+        private MainPage mainPage;
 
         public double balanceBeforeTransfer;
         public double balanceAfterTransfer;
@@ -33,13 +34,14 @@ namespace TestDerebit
             driver.Navigate().GoToUrl(webSiteURL);
             driver.Manage().Window.Maximize();
             loginPage = new LoginPage(driver);
+            mainPage = loginPage.LoginAs(username, password);
         }
         [Test]
         [TestCase(1)]
         public void Transfer_returnExpectedValue(double TransferAmount)
         {
-            
-            TransferPage transferPage = loginPage.LoginAs(username, password).GoToTransferPage();
+
+            TransferPage transferPage = mainPage.GoToTransferPage();
             balanceBeforeTransfer = transferPage.GetTransferBalance();
             transferPage.MakeTransfer(Convert.ToString(TransferAmount));
             Thread.Sleep(1000);
@@ -57,7 +59,7 @@ namespace TestDerebit
         [TestCase(1000)]
         public void ByCrypto_ReturnExpectedValue(double AmountToSpend)
         {
-            ByCryptoPage byCryptoPage = loginPage.LoginAs(username, password).GoToByCryptoPage();
+            ByCryptoPage byCryptoPage = mainPage.GoToByCryptoPage();
             byCryptoPage.EnterAmountToSpend(Convert.ToString(AmountToSpend));
             balanceBeforeByCrypto = byCryptoPage.GetSpendBalance();
             byCryptoGetAmount = byCryptoPage.GetSpendAmount();
