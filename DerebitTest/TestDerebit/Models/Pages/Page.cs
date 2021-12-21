@@ -14,26 +14,26 @@ namespace TestDerebit.Models
         public WebDriver _driver;
         public WebDriverWait _wait;
 
-        public void WaitUntilClickableAndClick (By element)
+        public IWebElement WaitUntilClickable (By element)
         {
             _wait.Until(ExpectedConditions.ElementToBeClickable(element));
-            _driver.FindElement(element).Click();
+            return _driver.FindElement(element);
         }
 
-        public void WaitUntilVisibleAndClick(By element)
+        public IWebElement WaitUntilVisible(By element)
         {
             _wait.Until(ExpectedConditions.ElementIsVisible(element));
-            _driver.FindElement(element).Click();
+            return _driver.FindElement(element);
         }
 
-        public void WaitUntilVisible(By element)
+        public IWebElement SelectFirst(By element)
         {
-            _wait.Until(ExpectedConditions.ElementIsVisible(element));
+            return _driver.FindElements(element).First();
         }
-        public void WaitUntilVisibleAndSendKeys(By element, string keys)
+       
+        public void GoToPage(string uri)
         {
-            _wait.Until(ExpectedConditions.ElementIsVisible(element));
-            _driver.FindElement(element).SendKeys(keys);
+            _driver.Navigate().GoToUrl(uri);
         }
     }
 }

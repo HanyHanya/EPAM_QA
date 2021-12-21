@@ -8,31 +8,34 @@ using OpenQA.Selenium.Support;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using TestDerebit.Models;
+using TestDerebit.Driver;
+using TestDerebit.Models.Pages;
+using TestDerebit.Utilities.Logger;
 
 namespace TestDerebit
 {
     [TestFixture]
-    class TestDerebit
+    class TestDerebit : Logging
     {
         private string username = "kiroki2001@gmail.com";
         private string password = "7mjX5@gPA23YMYc";
         private string webSiteURL = $"https://test.deribit.com/";
         private LoginPage loginPage;
         private MainPage mainPage;
+        private WebDriver driver;
 
         public double balanceBeforeTransfer;
         public double balanceAfterTransfer;
         public double balanceBeforeByCrypto;
         public double balanceAfterByCrypto;
         public double byCryptoGetAmount;
-        ChromeDriver driver;
+        
 
         [SetUp]
         public void SetUp()
         {
-            driver = new ChromeDriver();
+            driver = Driver.Driver.GetDriver();
             driver.Navigate().GoToUrl(webSiteURL);
-            driver.Manage().Window.Maximize();
             loginPage = new LoginPage(driver);
             mainPage = loginPage.LoginAs(username, password);
         }
@@ -44,16 +47,11 @@ namespace TestDerebit
             TransferPage transferPage = mainPage.GoToTransferPage();
             balanceBeforeTransfer = transferPage.GetTransferBalance();
             transferPage.MakeTransfer(Convert.ToString(TransferAmount));
-            Thread.Sleep(1000);
             balanceAfterTransfer = transferPage.GetTransferBalance();
             double expected = balanceBeforeTransfer - TransferAmount;
-            Console.WriteLine(balanceBeforeTransfer);
-            Console.WriteLine(expected);
             double real = balanceAfterTransfer;
-            Console.WriteLine(real);
             Assert.AreEqual(expected, real);
         }
-
 
         [Test]
         [TestCase(1000)]
@@ -68,10 +66,19 @@ namespace TestDerebit
             Assert.AreEqual(Math.Round(balanceBeforeTransfer + byCryptoGetAmount, 3), Math.Round(balanceAfterTransfer, 3));
         }
 
+        [Test]
+        [TestCase("1")]
+        public void MakeDeposit_ReturnExpectedValue(string DepositAmount)
+        {
+            DepositPage depositPage= mainPage.GoToDepositPage();
+            depositPage.MakeDeposit(DepositAmount).MakeOutDeposit();
+            Assert.AreEqual(depositPage.ReturnDepositAdressValue(), depositPage.ReturnFirstAdressRow());
+        }
+
         [TearDown]
         public void KillWebdriver()
         {
-            driver.Quit();
+            Driver.Driver.CloseBrowser();
         }
     }
 }

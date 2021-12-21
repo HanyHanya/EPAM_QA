@@ -29,34 +29,33 @@ namespace TestDerebit.Models
 
         private TransferPage SelectSource()
         {
-            WaitUntilClickableAndClick(_transferSourceDropDownLocator);
-            WaitUntilVisibleAndClick(_transferSourceSelectedLocator);
+            WaitUntilClickable(_transferSourceDropDownLocator).Click();
+            WaitUntilVisible(_transferSourceSelectedLocator).Click();
             return this;
         }
 
         private TransferPage SelectDestination()
         {
-            WaitUntilClickableAndClick(_transferDestinationDropDownLocator);
-            WaitUntilVisibleAndClick(_transferDestinationSelectedLocator);
+            WaitUntilClickable(_transferDestinationDropDownLocator).Click();
+            WaitUntilVisible(_transferDestinationSelectedLocator).Click();
             return this;
         }
         private TransferPage EnterAmountToTransfer(string amount)
         {
-            WaitUntilVisibleAndSendKeys(_amountTotransferLocator, amount);
+            WaitUntilVisible(_amountTotransferLocator).SendKeys(amount);
             return this;
         }
 
         private TransferPage MakeTransfer()
         {            
-            WaitUntilClickableAndClick(_transferButtonLocator);
+            WaitUntilClickable(_transferButtonLocator).Click();
             return this;
         }
 
         public double GetTransferBalance()
         {
             WaitUntilVisible(_transferBalanceLocator);
-            string s = _driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0];
-            Console.WriteLine(s);
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
             return Convert.ToDouble(_driver.FindElement(_transferBalanceLocator).Text.Split(' ')[0]);
         }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestDerebit.Models.Pages;
 
 namespace TestDerebit.Models
 {
@@ -14,6 +15,7 @@ namespace TestDerebit.Models
         private By _menuButtonLocator = By.XPath("//button[@data-id='sideMenuBtn']");
         private By _transferMenuButtonLocator = By.XPath("//a[@data-id='transfer']");        
         private By _byCryptoMenuButtonLocator = By.XPath("//a[@data-id='buyCrypto']");        
+        private By _depositenuButtonLocator = By.XPath("//a[@data-id='deposit']");        
 
         public MainPage(WebDriver driver)
         {
@@ -23,22 +25,26 @@ namespace TestDerebit.Models
 
         private MainPage OpenMenu()
         {
-            WaitUntilVisibleAndClick(_menuButtonLocator);
+            WaitUntilVisible(_menuButtonLocator).Click();
             return this;
         }
 
         private TransferPage SelectTransferPage()
         {
-            WaitUntilVisibleAndClick(_transferMenuButtonLocator);
+            WaitUntilVisible(_transferMenuButtonLocator).Click();
             return new TransferPage(_driver);
         }
 
         private ByCryptoPage SelectByCryptoferPage()
         {
-            WaitUntilVisibleAndClick(_byCryptoMenuButtonLocator);
+            WaitUntilVisible(_byCryptoMenuButtonLocator).Click();
             return new ByCryptoPage(_driver);
         }
-
+        private DepositPage SelectDepositPage()
+        {
+            WaitUntilVisible(_depositenuButtonLocator).Click();
+            return new DepositPage(_driver);
+        }
 
         public TransferPage GoToTransferPage()
         {
@@ -50,6 +56,11 @@ namespace TestDerebit.Models
         {
             OpenMenu();
             return SelectByCryptoferPage();
+        }
+        public DepositPage GoToDepositPage()
+        {
+            OpenMenu();
+            return SelectDepositPage();
         }
     }
 }

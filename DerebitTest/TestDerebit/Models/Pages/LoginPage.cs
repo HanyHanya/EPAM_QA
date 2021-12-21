@@ -23,19 +23,19 @@ namespace TestDerebit.Models
 
         private LoginPage EnterEmail(String email)
         {           
-            WaitUntilVisibleAndSendKeys(_emileFieldLocator, email);
+            WaitUntilVisible(_emileFieldLocator).SendKeys(email);
             return this;
         }
 
         private LoginPage EnterPassword(String password)
         {
-            WaitUntilVisibleAndSendKeys(_passwordFieldLocator, password);
+            WaitUntilVisible(_passwordFieldLocator).SendKeys(password);
             return this;
         }
 
         private MainPage Login()
         {
-            WaitUntilClickableAndClick(_loginButtonLocator);
+            WaitUntilClickable(_loginButtonLocator).Click();
             return new MainPage(_driver);
         }
 
